@@ -61,7 +61,7 @@ class mocoder():
             for byte in s:
                 self.process_signal(int(chr(byte))-1)
      
-     # Dummy method           
+     # Delegates function to correct function basef on signal
     def process_signal(self,sig):
         print(sig)
         if sig == _dot or sig == _dash:
@@ -70,15 +70,16 @@ class mocoder():
             self.handle_symbol_end()
         elif sig == _word_pause:
             self.handle_word_end()
-
         return True
 
+    # Updates current symbol that is being recorded
     def update_current_symbol(self, sig):
-        self.current_symbol = self.current_symbol + str(sig)
+        self.current_symbol += str(sig)
 
+    # Handles the event that a pause has happened, the current symbol is translated to a letter
     def handle_symbol_end(self):
         if self.current_symbol is not '':
-            if self.current_symbol in self._morse_codes.keys():
+            if self.current_symbol in self._morse_codes:
                 char_symbol = self._morse_codes[self.current_symbol]
                 self.update_current_word(char_symbol)
                 self.current_symbol = ''
@@ -86,10 +87,12 @@ class mocoder():
                 print("This does not correspond to any symbol, resetting dots and dashes")
                 self.current_symbol = ''
 
+    # updates current word with the given input symbol
     def update_current_word(self, symbol):
-        self.current_word = self.current_word + symbol
+        self.current_word  += symbol
         print("Current word:   " + self.current_word)
 
+    # Handles the event that a long time has passed between signals. Prints the word and reset for new word
     def handle_word_end(self):
         self.handle_symbol_end()
         print("-------   " + self.current_word +"   -------")

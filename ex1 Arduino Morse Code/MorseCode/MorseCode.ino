@@ -8,14 +8,14 @@ const int T = 300; // milliseconds for which a time period is defined
 
 int sentCommand = -1;
 
-int pressTime = 0; // holds the time in millis the button is pressed
+int pressTime = 0; // holds the time in millis the button was pressed
+// HIGH means that the button is not pressed. LOW is pressed
 int buttonState = HIGH; // to get input of current button state
 int lastButtonState = HIGH; // to hold value of previous button state
 boolean stateChanged = false; // describes if the state of the buttons changed
 
 void setup() {
   Serial.begin(9600);
-  // initialize the LED pin as an output:
   pinMode(redLedPin, OUTPUT);  
   pinMode(blueLedPin, OUTPUT);  
   pinMode(greenLedPin, OUTPUT);
@@ -23,17 +23,23 @@ void setup() {
 
 }
 
+// 0000 0 0100 0100 111
+
 void loop() {
+  // Read the pin and change the state if valid
   buttonState = digitalRead(buttonPin);
   changeButtonStates(buttonState); 
   
-  if(millis() - pressTime > T/2 && stateChanged){
+  if(millis() - pressTime > T/2 && stateChanged){ // timer handles deboounce together with statechanged
     pressTime = millis() - pressTime;
+    // return command to send corresponding to timeinterval since last state change
     sentCommand = sendCommand(pressTime);
+    // Light LED based on sent command
     showLastCommandWithLed(sentCommand);
+    // set NOW as time for last press
     pressTime = millis();
-    stateChanged = false;
  }
+  stateChanged = false;
  
 
 }
@@ -42,14 +48,12 @@ void loop() {
 // sends command depending on the time the button was in rest or paused
 int sendCommand(int pressTime){
   int commandToSend = -1;
-  if(buttonState == HIGH){ // button has been pressed until now
+  if(buttonState == HIGH){
     if(pressTime <= 2*T && pressTime >= T/2 ){
-      // send value 0
       Serial.print(1);
       commandToSend = 1;
     }
     else if(pressTime <= 4*T && pressTime > 2*T){
-      // send 1
       Serial.print(2);
       commandToSend = 2;
     }
@@ -57,7 +61,7 @@ int sendCommand(int pressTime){
       // do nothing
     }
   }
-  else if(buttonState == LOW){ // button was unpressed until now
+  else if(buttonState == LOW){
     if(pressTime <= 5*T && pressTime >= 2*T){
       // send 2
       Serial.print(3);
@@ -78,12 +82,8 @@ int sendCommand(int pressTime){
 
 // changes buttonstates depending on given state, and the previous
 void changeButtonStates(int buttonState){
-  if(buttonState == LOW && lastButtonState == HIGH){
-    lastButtonState = LOW;
-    stateChanged = true;
-  }
-  else if (buttonState == HIGH && lastButtonState == LOW){
-    lastButtonState = HIGH;
+  if(buttonState != lastButtonState ){
+    lastButtonState = buttonState;
     stateChanged = true;
   }
 }
