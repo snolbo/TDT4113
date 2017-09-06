@@ -20,16 +20,14 @@ class SingleGame:
         p1_num = self.dict_str2num[p1_choice]
         p2_num = self.dict_str2num[p2_choice]
         p1_result = self.winner_table[p1_num][p2_num]
-        #print( p1_choice + "    " + p2_choice)
         self.player1.receive_result(p1_result, p1_choice, p2_choice)
         self.player2.receive_result(-p1_result, p2_choice, p1_choice)
 
-
-        self.str = self.player1.get_name() + "(1) choose: " + p1_choice + ", " + self.player2.get_name() + "(2) choose: " + p2_choice + " | "
+        self.str = self.player1.get_name() + " choose: " + p1_choice + ", " + self.player2.get_name() + " choose: " + p2_choice + " | "
         if p1_result == 0:
             self.str += "Draw"
         else:
-            self.str+= "Winner is " + (self.player1.get_name() + "(1)" if p1_result else self.player2.get_name() + "(2)")
+            self.str+= "Winner is " + (self.player1.get_name() if p1_result == 1 else self.player2.get_name())
         return p1_result
 
     def __str__(self):
@@ -50,6 +48,7 @@ class MultipleGame(SingleGame):
         p2_percentage = np.array([0])
         for i in range(1,self.num_games+1):
             p1_result = self.play_single_game()
+            print(self.__str__())
             if p1_result == 1:
                 p1_percentage = np.append(p1_percentage, p1_percentage[i-1] +1)
                 p2_percentage = np.append(p2_percentage, p2_percentage[i-1])
@@ -80,21 +79,9 @@ class MultipleGame(SingleGame):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 p1 = PlayerTypes.MostCommon()
-p2 = PlayerTypes.MostCommon()
-
-game = MultipleGame(p1,p2, 300)
+p2 = PlayerTypes.Historian(2)
+game = MultipleGame(p1,p2, 100)
 print(game)
-
 game.play_tournament()
+print(game)
