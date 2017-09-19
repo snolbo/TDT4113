@@ -66,10 +66,12 @@ class MultipleGame(SingleGame):
         matplotlib.pyplot.figure(1)
         matplotlib.pyplot.plot(I, p1_percentage)
         matplotlib.pyplot.axis([1,self.num_games, 0,1])
+        matplotlib.pyplot.title(p1.get_name())
 
         matplotlib.pyplot.figure(2)
         matplotlib.pyplot.plot(I, p2_percentage)
         matplotlib.pyplot.axis([1,self.num_games, 0, 1])
+        matplotlib.pyplot.title(p2.get_name())
 
 
         matplotlib.pyplot.show()
@@ -79,9 +81,9 @@ class MultipleGame(SingleGame):
 
 
 
-p1 = PlayerTypes.MostCommon()
-p2 = PlayerTypes.Historian(2)
-game = MultipleGame(p1,p2, 100)
+p1 = PlayerTypes.Historian(2)
+p2 = PlayerTypes.MostCommon()
+game = MultipleGame(p1,p2, 1000)
 print(game)
 game.play_tournament()
 print(game)

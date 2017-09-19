@@ -9,7 +9,6 @@ class Player:
         self.chosen_action = None
 
     def choose_action(self):
-        self.chosen_action = "rock"
         choice = input("Rock, Paper or Scissor?: ")
         choice = choice.lower()
         if choice in self.dict_str2num:
@@ -18,7 +17,7 @@ class Player:
             print("Illegal choice, choose again...:  ")
             return self.choose_action()
 
-    def evaluate_choosing_random(self, score_array):
+    def evaluate_choosing_random(self, score_array): # random.choice
         possible_choices = []
         max_index = np.argmax(score_array)
         for x in range(0, 3):
@@ -33,7 +32,7 @@ class Player:
         return choice
 
     def receive_result(self, result, my_choice, opponent_choice):
-        print("You choose: " + my_choice + ", Opponent choose: " + opponent_choice)
+        print("You choose: " + my_choice +  ", Opponent choose: " + opponent_choice )
         text_result = ""
         if result ==1:
             text_result = "You won!"
@@ -96,7 +95,6 @@ class Historian(Player):
         self.memory = memory
 
     def choose_action(self):
-        subsequence = self.action_sequence[len(self.action_sequence)-2:]
         #logic for finding most common subsequnce. When memory count is known, could have created table with all
         # combinations of subsequences to faster find and store subsequence occurences, but brute force ftw!
         choice = 0
