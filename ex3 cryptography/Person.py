@@ -65,35 +65,18 @@ class Hacker(Receiver):
                     num_valid_words += 1
             if num_valid_words/num_words > 0.6: # if x percentage of the words are in the language, add to messages
                 valid_decoded_messages.append(decoded_text)
+                print(key)
 
         return valid_decoded_messages
 
 
-
-'''
-s = "Mitt navn er snorre"
-
-
-rsa = RSA(8)
-rsa.generate_keys()
-encoded = rsa.encode(s)
-decoded = rsa.decode(encoded)
-
-print(s)
-print(str(encoded))
-print(decoded)
-'''
-
-
-
-
 text = "hellow, how? !are you /doing today %%and is! not! this ?a great' evening? rubbishwordzz"
-alg = Unbreakable()
-
+alg = Caesar()
+key = "L"
 
 p1 = Sender()
 p1.set_algorithm(alg)
-p1.set_key("SN")
+p1.set_key(key)
 
 p2 = Receiver()
 p2.set_algorithm(alg)
@@ -102,12 +85,11 @@ p2.set_key(p1.get_key())
 cipher_text = p1.operate_cipher(text)
 decoded_text = p2.operate_cipher(cipher_text)
 
-print("Text: " + text)
-print("encoded text: " + str(cipher_text))
-print("decoded text: " + decoded_text)
+print("Clear text: " + text)
+print("encoded text sent from sender: " + str(cipher_text))
+print("decoded text deciphered by receiver: " + decoded_text)
 print("Verified?: " + str(alg.verify(text, decoded_text)))
 print()
-
 
 h = Hacker()
 h.set_algorithm(alg)
