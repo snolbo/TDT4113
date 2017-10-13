@@ -71,12 +71,12 @@ class Hacker(Receiver):
 
 
 text = "hellow, how? !are you /doing today %%and is! not! this ?a great' evening? rubbishwordzz"
-alg = Caesar()
-key = "L"
+alg = RSA(8)
+# key = 8
 
 p1 = Sender()
 p1.set_algorithm(alg)
-p1.set_key(key)
+# p1.set_key(key)
 
 p2 = Receiver()
 p2.set_algorithm(alg)
@@ -91,13 +91,13 @@ print("decoded text deciphered by receiver: " + decoded_text)
 print("Verified?: " + str(alg.verify(text, decoded_text)))
 print()
 
-h = Hacker()
-h.set_algorithm(alg)
-valid_decoded_messages  = h.hack(cipher_text)
-print()
-print("Possible decoded messages:")
-print(valid_decoded_messages)
-
+# h = Hacker()
+# h.set_algorithm(alg)
+# valid_decoded_messages  = h.hack(cipher_text)
+# print()
+# print("Possible decoded messages:")
+# print(valid_decoded_messages)
+#
 
 
 

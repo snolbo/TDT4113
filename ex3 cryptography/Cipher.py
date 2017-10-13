@@ -196,7 +196,7 @@ class Unbreakable(Cipher): # Done
 class RSA(Cipher): # not correct
     def __init__(self, bits):
         self.bits = bits
-        self.public_key = None
+        self.key = None
         self.private_key = None
         self.generate_keys()
         return
@@ -205,7 +205,7 @@ class RSA(Cipher): # not correct
         encoded_list = []
         blocks_from_text = crypto_utils.blocks_from_text(clear_text, 1)
         for block in blocks_from_text:
-            number = pow(block, self.public_key[1], self.public_key[0])
+            number = pow(block, self.key[1], self.key[0])
             encoded_list.append(number)
         return encoded_list
 
@@ -235,14 +235,14 @@ class RSA(Cipher): # not correct
             d = crypto_utils.modular_inverse(e, phi)
             if (e*d)% phi == 1: # ensures decoding is unique
                 break
-        self.public_key = (n,e)
+        self.key = (n,e)
         self.private_key = (n,d)
-        print("public key: " + str(self.public_key))
+        print("public key: " + str(self.key))
         print("private key: " + str(self.private_key))
         return
 
 
-    def possible_keys(self, max_key_len = 2):
+    def possible_keys(self, max_key_len = 1):
         possible_keys = []
         for key_len in range(1, max_key_len +1):
             for subset in itertools.permutations(self.ALPHABETH, key_len):

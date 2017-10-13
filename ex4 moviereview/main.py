@@ -3,7 +3,6 @@ import os
 from collections import Counter
 import Classifier
 
-# PART 6  Å LAGER NGRAM bidrag gjelper ingenting da enkeltordene vil få større frekvenser og dytte ut ngramene....
 
 directory = "./data/subset/train/"
 pos_dir = directory + "pos/"
@@ -35,7 +34,6 @@ neg_ngram_dict = utils.get_ngram_dict_from_directory(neg_dir, N)
 
 pos_most_pop = dict(Counter(pos_ngram_dict).most_common(NUM))
 neg_most_pop = dict(Counter(neg_ngram_dict).most_common(NUM))
-
 for key in pos_most_pop:
     pos_most_pop[key] /= num_total_reviews
 for key in neg_most_pop:
