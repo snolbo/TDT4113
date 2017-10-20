@@ -74,7 +74,7 @@ def sign_image(img):
     txt = Image.new('RGBA', base.size, (255, 255, 255, 0))
     # get a font
     font_size = 20
-    fnt = ImageFont.truetype("arial.ttf", font_size)
+    fnt = ImageFont.load_default()
     # get a drawing context
     d = ImageDraw.Draw(txt)
     # draw text, full opacity
@@ -91,25 +91,28 @@ img = Imager(path_name)
 img.load_image()
 
 ### Option 1
-# grgb = create4x4GRGB(img)
-# result_image = grgb
+grgb = create4x4GRGB(img)
+result_image = grgb
 
 ### Option 2
-# blurred = blur(img, radius=2)
+# blurred = blur(img, radius=1)
 # edge_orig = find_edges(img)
 # edge_blurred = find_edges(blurred)
 # edge_compare = create4x4(img, blurred, edge_orig, edge_blurred)
 # result_image = edge_compare
 
 ## Option 3
-edge_orig = find_edges(img)
-result_image = contour_edges(img)
+# edge_orig = find_edges(img)
+# result_image = contour_edges(img)
 
 
 
 
 
+# result_image = result_image.tunnel()
 
-
+result_image = result_image.resize(img.xmax, img.ymax)
 result_image = sign_image(result_image)
+
 result_image.display()
+
