@@ -44,8 +44,9 @@ class Behavior:
     # Interface between bbcon and behavior
     def update(self):
         self.update_activity_status()
-        self.sense_and_act()
-        self.update_weight()
+        if self.active_flag:
+            self.sense_and_act()
+            self.update_weight()
 
     # Uses sensob readings to produce motor recommendations (and halt requests). Specialized for each behavior
     def sense_and_act(self):
