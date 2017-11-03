@@ -1,63 +1,93 @@
 
 
 class Behavior:
-    def __init__(self, bbcon, motor_recommendations, active_flag=True, priority=1):
-        # pointer to bbcon that we send recommendations and weights to
+
+    def __init__(self, bbcon, active_flag = True, priority = 1):
+        # Pointer to the controller that uses this behavior
         self.bbcon = bbcon
 
-        # Sensobs this bahavior gets data from
-        self.sensobs = []
+        # List of recommendations that this behavior provides to the arbitrator
+        self.motor_recommendations = []
 
-        # list of recommendations, one per motob this behavior passes to arbitrator, all motors used by all behaviors
-        self.motor_recommendatoins = motor_recommendations
-
-        # Flag indicating whether this behavior should consider sensob data
+        # Indicates if the behavior is active
         self.active_flag = active_flag
 
-        # Field indicating whether this behavior wants the robot to halt
-        self.halt_request = False # What to put here? cant I just send a very high weight for the motor recommendation?
-
-        # static predefined value for this behavior
+        # Value indicating the importance of this behavior. Static
         self.PRIORITY = priority
 
-        # Number in range[0,1] indicating degree which current conditions warrant performance of this behavior
-        # meaning all reccommendations issued by this behavior
+        # Request robot to completely halt activity
+        self.halt_request = False
+
+        # Number in range [0,1], indicating degree of warrant of this behavior
         self.match_degree = 0
 
-        # Weight arbitrator uses to value the winning behavior of recommendations
-        self.weight = self.PRIORITY * self.match_degree
+        # Basis for selecting winning behavior for a timestep
+        self.weight = 0
 
-        # Remainding Field for memory etween timesteps are created by specializing classes
-
-
-    # Functions to consider activation of Behavior
+    # Test whether it should deactivate
     def consider_deactivation(self):
         raise NotImplementedError("Please Implement this method")
 
-    # Function to consider deactivation of Behavior
-    def consider_activaton(self):
+
+    # Test whether it should activate
+    def consider_activation(self):
         raise NotImplementedError("Please Implement this method")
-
-    # Read sensob data and suggest motor recommendations (and weights?)
-    def sense_and_act(self):
-        raise NotImplementedError("Please Implement this method")
-
-
-    def update(self):
-        # 1. Update activity status by considering need for activation. Get info from arbitrator?
-        if self.consider_activaton():
+    
+    def update_activity_status(self):       
+        if self.consider_activation():
             self.active_flag = True
         elif self.consider_deactivation():
             self.active_flag = False
+            
+    def update_weight(self):
+        self.weight = self.PRIORITY * self.match_degree
+        
+        
+    # Interface between bbcon and behavior
+    def update(self):
+        # Update activity status
+        # Sensobs should be informed if activity status changes
 
-        # Only perform calculations and recommendations if this behavior is active
         if self.active_flag:
             # 2. call sense_and_act
             self.sense_and_act()
+        # Update weigh
+       
 
-            # Update behavior's weight. Need to consider the input from sensor, Place inside sense_and_act()??
+    # Uses sensob readings to produce motor recommendations (and halt requests). Specialized for each behavior
+    def sense_and_act(self):
+
+        # Gather values of sensobs
+        # (Checking relvevant posts on bbcon)
+        # Determine motor recommendations (and halt request)
+        # Set match degree
+        
+class Forward(Behavior):
+
+    def __init__(self, bbcon):
+        super(Forward, self).__init__(bbcon)
+
+    def consider_deactivation(self):
+        return False
+
+    def consider_activation(self):
+        return False
+    
+    def update(self):
+        self.update_activity_status()
+        self.sense_and_act()
+        self.update_weight()
+
+    def sense_and_act(self):
+        self.motor_recommendations.append("F")
+        self.match_degree = 1
+     
+           
+        
 
 
-        pass
+
+  
+    
 
 
