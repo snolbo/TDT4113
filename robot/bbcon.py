@@ -2,10 +2,11 @@ from time import sleep
 from sensob import Sensob
 from arbitrator import Arbitrator
 from motob import Motob
+import Behavior
 
 
 class BBCON():
-    def __init__(self, arbitrator,  sensobs=[], motob=None, behaviors=[], active_behaviors=[]):
+    def __init__(self, arbitrator,  motob, sensobs=[], behaviors=[], active_behaviors=[]):
         self.sensobs = sensobs
 
         self.behaviors = behaviors
@@ -71,13 +72,24 @@ class BBCON():
 
 
 
-    def test_run(self):
+    def test_run(self, time):
         i = 0
         while(not self.halt):
             i += 1
-            if (i==20):
+            if (i >= time/self.timestep_length):
                 self.halt = True
             self.runOneTimestep()
 
 
+
+def test():
+    motob = Motob()
+    arbritator = Arbitrator()
+    bbcon = BBCON(arbritator, motob)
+    arbritator.receive_bbcon(bbcon)
+    forwd = Behavior.Forward(bbcon)
+    backwd = Behavior.Backward(bbcon)
+    bbcon.addBehavior(forwd)
+    bbcon.addBehavior(backwd)
+    bbcon.test_run(10)
 
