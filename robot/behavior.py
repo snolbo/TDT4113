@@ -76,7 +76,7 @@ class Forward(Behavior):
             self.update_weight()
 
     def sense_and_act(self):
-        self.motor_recommendations.append("F")
+        self.motor_recommendations = [("F", 0.5)]
         self.match_degree = 1
         
       
