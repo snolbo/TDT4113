@@ -1,17 +1,23 @@
 from time import sleep
+from sensob import Sensob
+from arbitrator import Arbitrator
+from motob import Motob
 
-class BBCON:
-    def __init__(self, arbitrator,  sensobs=[], motobs=[], behaviors=[], active_behaviors=[]):
+
+class BBCON():
+    def __init__(self, arbitrator,  sensobs=[], motob=None, behaviors=[], active_behaviors=[]):
         self.sensobs = sensobs
 
         self.behaviors = behaviors
-        self.motobs = motobs
+        self.motob = motob
         self.active_behaviors = active_behaviors
 
         # Object to resolve actuator request produced by behaviors
         self.arbitrator = arbitrator
 
         self.timestep_length = 0.5
+
+        self.halt = False
 
 
     def addBehavior(self, behavior):
@@ -24,7 +30,7 @@ class BBCON:
 
     def activateBehavior(self, behavior):
         if behavior not in self.active_behaviors:
-            self.activate_behaviors.append(behavior)
+            self.active_behaviors.append(behavior)
 
     def deactivateBehavior(self, behavior):
         if behavior in self.active_behaviors:
@@ -35,7 +41,7 @@ class BBCON:
     def runOneTimestep(self):
 
         # 1. update all sensobs, query for values and pre-proccessing
-        for sensob in sensobs:
+        for sensob in self.sensobs:
             sensob.update()
 
 
@@ -46,13 +52,17 @@ class BBCON:
 
         # 3. invoke arbitrator -> arbitrator.choose_action() that chooses and return winning behavior's
         #    motor reccomendations and halt_requests
+        actions_chosen = self.arbitrator.choose_action()
+        if actions_chosen[1]:
+            self.halt = True
 
 
-        # 4. update all motobs based on these reccomendations, motobs updates settings on all motors
+        # 4. update motob based on these reccomendations, motob updates settings on motors
+        self.motob.update(actions_chosen)
 
 
         # 5 Wait time step to let motor perform the chosen action
-        time.sleep(self.timestep_length)
+        sleep(self.timestep_length)
 
 
         # 6 reset sensobs
@@ -61,6 +71,13 @@ class BBCON:
 
 
 
+    def test_run(self):
+        i = 0
+        while(not self.halt):
+            i += 1
+            if (i==20):
+                self.halt = True
+            self.runOneTimestep()
 
 
 
