@@ -1,5 +1,3 @@
-
-
 class Behavior:
 
     def __init__(self, bbcon, active_flag = True, priority = 1):
@@ -32,32 +30,37 @@ class Behavior:
     # Test whether it should activate
     def consider_activation(self):
         raise NotImplementedError("Please Implement this method")
-    
-    def update_activity_status(self):       
+
+    def update_activity_status(self):
         if self.consider_activation():
             self.active_flag = True
         elif self.consider_deactivation():
             self.active_flag = False
-            
+
     def update_weight(self):
         self.weight = self.PRIORITY * self.match_degree
-        
-        
+
+
     # Interface between bbcon and behavior
     def update(self):
-        # Update activity status
-        # Sensobs should be informed if activity status changes
-        # Update weigh
-       
+        self.update_activity_status()
+        self.sense_and_act()
+        self.update_weight()
 
     # Uses sensob readings to produce motor recommendations (and halt requests). Specialized for each behavior
     def sense_and_act(self):
 
         # Gather values of sensobs
+
         # (Checking relvevant posts on bbcon)
+
         # Determine motor recommendations (and halt request)
+
         # Set match degree
-        
+
+        return 0
+
+
 class Forward(Behavior):
 
     def __init__(self, bbcon):
@@ -68,23 +71,26 @@ class Forward(Behavior):
 
     def consider_activation(self):
         return False
-    
-    def update(self):
-        self.update_activity_status()
-        if self.active_flag:
-            self.sense_and_act()
-            self.update_weight()
 
     def sense_and_act(self):
         self.motor_recommendations = [("F", 0.5)]
         self.match_degree = 1
-        
-      
-     
-           
-        
 
 
+class Backward(Behavior):
+
+    def __init__(self, bbcon):
+        super(Backward, self).__init__(bbcon)
+
+    def consider_deactivation(self):
+        return False
+
+    def consider_activation(self):
+        return False
+
+    def sense_and_act(self):
+        self.motor_recommendations = [("B", 0.5)]
+        self.match_degree = 0.9
 
   
     
