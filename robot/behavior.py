@@ -47,10 +47,6 @@ class Behavior:
     def update(self):
         # Update activity status
         # Sensobs should be informed if activity status changes
-
-        if self.active_flag:
-            # 2. call sense_and_act
-            self.sense_and_act()
         # Update weigh
        
 
@@ -75,12 +71,15 @@ class Forward(Behavior):
     
     def update(self):
         self.update_activity_status()
-        self.sense_and_act()
-        self.update_weight()
+        if self.active_flag:
+            self.sense_and_act()
+            self.update_weight()
 
     def sense_and_act(self):
         self.motor_recommendations.append("F")
         self.match_degree = 1
+        
+      
      
            
         
