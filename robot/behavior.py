@@ -49,16 +49,13 @@ class Behavior:
 
     # Uses sensob readings to produce motor recommendations (and halt requests). Specialized for each behavior
     def sense_and_act(self):
-
+        
         # Gather values of sensobs
-
         # (Checking relvevant posts on bbcon)
-
         # Determine motor recommendations (and halt request)
-
         # Set match degree
+        raise NotImplementedError("Please Implement this method")
 
-        return 0
 
 
 class Forward(Behavior):
