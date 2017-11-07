@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from time import sleep
 import RPi.GPIO as GPIO
-import wiringpi2 as wp
+import wiringpi as wp
 
 
 class Motors():
@@ -90,7 +90,7 @@ class Motors():
         # Set speed to the absolute value of the passed values
         self.set_left_speed(abs(left_val))
         self.set_right_speed(abs(right_val))
-        self.persist(dur)
+        #self.persist(dur)
 
     # These are lower-level routines that translate speeds and directions into write commands to the motor output pins.
 
